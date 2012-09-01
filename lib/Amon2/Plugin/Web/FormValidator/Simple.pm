@@ -6,13 +6,26 @@ our $VERSION = '0.01';
 1;
 __END__
 
+=encoding utf-8
+
 =head1 NAME
 
-Amon2::Plugin::Web::FormValidator::Simple -
+Amon2::Plugin::Web::FormValidator::Simple - Amon2 plugin
 
 =head1 SYNOPSIS
 
-  use Amon2::Plugin::Web::FormValidator::Simple;
+    use Amon2::Plugin::Web::FormValidator::Simple;
+
+    __PACKAGE__->load_plugins('Web::FormValidator::Simple');
+
+    get '/user/{team}/{name}/' => sub {
+        my ($c) = @_;
+        my $action = 'user_page';
+        $c->validate($action);
+        if ($c->form->has_error) {
+            $c->error_page($action);
+        }
+    };
 
 =head1 DESCRIPTION
 
