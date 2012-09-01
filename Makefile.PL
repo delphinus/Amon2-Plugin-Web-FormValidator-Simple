@@ -2,7 +2,8 @@ use inc::Module::Install;
 name 'Amon2-Plugin-Web-FormValidator-Simple';
 all_from 'lib/Amon2/Plugin/Web/FormValidator/Simple.pm';
 
-# requires '';
+requires 'Amon2::Web';
+requires 'FormValidator::Simple';
 
 tests 't/*.t';
 author_tests 'xt';
