@@ -1,27 +1,89 @@
-This is Perl module Amon2::Plugin::Web::FormValidator::Simple.
+NAME
+    Amon2::Plugin::Web::FormValidator::Simple - Amon2 plugin
 
-INSTALLATION
+SYNOPSIS
+        # MyApp.pm
 
-Amon2::Plugin::Web::FormValidator::Simple installation is straightforward. If your CPAN shell is set up,
-you should just be able to do
+        __PACKAGE__->load_plugins('Web::FormValidator::Simple');
 
-    % cpan Amon2::Plugin::Web::FormValidator::Simple
+        # MyApp/Web/Dispatcher.pm
 
-Download it, unpack it, then build it as per the usual:
+        get '/user/{team}/{name}/' => sub {
+            my ($c) = @_;
 
-    % perl Makefile.PL
-    % make && make test
+            # do validate
+            $c->form(
+                team => [qw!NOT_BLANK!, [qw!LENGTH 1 10!]],
+                name => [qw!NOT_BLANK!, [qw!LENGTH 1 10!]],
+            );
 
-Then install it:
+            # if detect errors, return with a error page.
+            if ($c->form->has_error) {
+                return $c->render('error.tt');
+            }
 
-    % make install
+            ...
+        };
 
-DOCUMENTATION
+        # same as C::P::FV::S, you can use messages/messages.yml
 
-Amon2::Plugin::Web::FormValidator::Simple documentation is available as in POD. So you can do:
+        # development.pl
+        ...
 
-    % perldoc Amon2::Plugin::Web::FormValidator::Simple
+        +{
+            ...
 
-to read the documentation online with your favorite pager.
+            validator => +{
+                message_format => '<p>%s</p>',
+                message_decode_from => 'UTF-8',
+                # messages => 'messages.yml',
+                messages => +{
+                    account => +{
+                        team => +{
+                            NOT_BLANK => 'TEAM cannot be blank!',
+                            LENGTH => 'TEAM length must be [1, 10]',
+                        },
+                        name => +{
+                            NOT_BLANK => 'NAME cannnot be blank!',
+                            LENGTH => 'NAME length must be [1, 10]',
+                        },
+                    },
+                },
+            },
+        };
 
-JINNOUCHI Yasushi
+        # messages.yml
+
+        account:
+            team:
+                NOT_BLANK: TEAM cannot be blank!
+                LENGTH: TEAM length must be [1, 10]
+            name:
+                NOT_BLANK: NAME cannot be blank!
+                LENGTH: NAME length must be [1, 10]
+
+DESCRIPTION
+    Amon2::Plugin::Web::FormValidator::Simple is a port of
+    Catalyst::Plugin::FormValidator::Simple. This module has the same
+    methods and options, so see her documents.
+
+METHODS
+    $c->init()
+        initial setup.
+
+    $c->form()
+        validate form/query parameters.
+
+    $c->set_invalid_form()
+        set error from manual validation.
+
+AUTHOR
+    JINNOUCHI Yasushi <delphinus@remora.cx>
+
+SEE ALSO
+    Amon2::Web FormValidator::Simple Catalyst::Plugin::FormValidator::Simple
+
+LICENSE
+    This library is free software; you can redistribute it and/or modify it
+    under the same terms as Perl itself.
+
