@@ -3,7 +3,7 @@ use utf8;
 use strict;
 use warnings;
 use 5.008001;
-our $VERSION = '0.01';
+our $VERSION = '0.03';
 
 use FormValidator::Simple;
 
