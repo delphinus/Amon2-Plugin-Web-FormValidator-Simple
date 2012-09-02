@@ -57,7 +57,7 @@ my $conf = +{ # app config {{{
 <!doctype html>
 this is index.
 TT
-            error => <<TT
+            error => <<TT,
 <!doctype html>
 [%- IF c().form().has_error %]
 <ul>
@@ -224,10 +224,5 @@ sub query_string {
     $str =~ s/^&//;
 
     return $str;
-}
-
-sub can_use {
-    my $module = shift;
-    return eval "require $module; 1";
 }
 #}}}
