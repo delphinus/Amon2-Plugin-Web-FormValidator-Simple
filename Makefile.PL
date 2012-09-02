@@ -11,4 +11,5 @@ author_tests 'xt';
 test_requires 'Test::More';
 auto_set_repository;
 auto_include;
+readme_from 'lib/Amon2/Plugin/Web/FormValidator/Simple.pm';
 WriteAll;
