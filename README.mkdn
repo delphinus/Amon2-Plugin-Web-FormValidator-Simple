@@ -13,7 +13,7 @@ Amon2::Plugin::Web::FormValidator::Simple - Amon2 plugin
     get '/user/{team}/{name}/' => sub {
         my ($c) = @_;
 
-        # do validate
+        # do validation
         $c->form(
             team => [qw!NOT_BLANK!, [qw!LENGTH 1 10!]],
             name => [qw!NOT_BLANK!, [qw!LENGTH 1 10!]],
