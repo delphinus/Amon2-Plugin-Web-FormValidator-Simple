@@ -1,62 +1,8 @@
-package Amon2::Plugin::Web::FormValidator::Simple;
-use utf8;
-use strict;
-use warnings;
-use 5.008001;
-our $VERSION = '0.01';
-
-use FormValidator::Simple;
-
-sub init { my ($class, $c, $conf) = @_; #{{{
-    my $s = $c->config->{validator};
-
-    my $plugins = $s && exists $s->{plugins} ? $s->{plugins} : [];
-    FormValidator::Simple->import(@$plugins);
-
-    FormValidator::Simple->set_messages($s->{messages})
-        if $s && exists $s->{messages};
-    FormValidator::Simple->set_option(%{$s->{options}})
-        if $s && exists $s->{options};
-    FormValidator::Simple->set_message_format($s->{message_format})
-        if $s && exists $s->{message_format};
-    FormValidator::Simple->set_message_decode_from($s->{message_decode_from})
-            if $s && exists $s->{message_decode_from};
-
-    Amon2::Util::add_method($c, 'form', \&form);
-    Amon2::Util::add_method($c, 'set_invalid_form', \&set_invalid_form);
-
-    $c->add_trigger(BEFORE_DISPATCH => sub { my $c = shift;
-        $c->{validator} = FormValidator::Simple->new;
-
-        return;
-    });
-} #}}}
-
-sub form { my $c = shift; #{{{
-    if ($_[0]) {
-        my $form = $_[1] ? [@_] : $_[0];
-        $c->{validator}->check($c->req, $form);
-    }
-
-    return $c->{validator}->results;
-} #}}}
-
-sub set_invalid_form { my $c = shift; #{{{
-    $c->{validator}->set_invalid(@_);
-
-    return $c->{validator}->results;
-} #}}}
-
-1;
-__END__
-
-=encoding utf-8
-
-=head1 NAME
+# NAME
 
 Amon2::Plugin::Web::FormValidator::Simple - Amon2 plugin
 
-=head1 SYNOPSIS
+# SYNOPSIS
 
     # MyApp.pm
 
@@ -118,43 +64,37 @@ Amon2::Plugin::Web::FormValidator::Simple - Amon2 plugin
             NOT_BLANK: NAME cannot be blank!
             LENGTH: NAME length must be [1, 10]
 
-=head1 DESCRIPTION
+# DESCRIPTION
 
 Amon2::Plugin::Web::FormValidator::Simple is a port of
-L<Catalyst::Plugin::FormValidator::Simple>.
+[Catalyst::Plugin::FormValidator::Simple](http://search.cpan.org/perldoc?Catalyst::Plugin::FormValidator::Simple).
 This module has the same methods and options, so see her documents.
 
-=head1 METHODS
+# METHODS
 
-=over 4
-
-=item C<< $c->init() >>
+- `$c->init()`
 
 initial setup.
 
-=item C<< $c->form() >>
+- `$c->form()`
 
 validate form/query parameters.
 
-=item C<< $c->set_invalid_form() >>
+- `$c->set_invalid_form()`
 
 set error from manual validation.
 
-=back
+# AUTHOR
 
-=head1 AUTHOR
+JINNOUCHI Yasushi <delphinus@remora.cx>
 
-JINNOUCHI Yasushi E<lt>delphinus@remora.cxE<gt>
+# SEE ALSO
 
-=head1 SEE ALSO
+[Amon2::Web](http://search.cpan.org/perldoc?Amon2::Web)
+[FormValidator::Simple](http://search.cpan.org/perldoc?FormValidator::Simple)
+[Catalyst::Plugin::FormValidator::Simple](http://search.cpan.org/perldoc?Catalyst::Plugin::FormValidator::Simple)
 
-L<Amon2::Web>
-L<FormValidator::Simple>
-L<Catalyst::Plugin::FormValidator::Simple>
-
-=head1 LICENSE
+# LICENSE
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
-
-=cut
