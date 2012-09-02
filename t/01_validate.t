@@ -4,6 +4,7 @@ use warnings;
 use Test::More;
 use Test::Requires 'Test::WWW::Mechanize::PSGI';
 
+use Encode;
 use Plack::Middleware::Lint;
 use Text::Xslate;
 
@@ -106,7 +107,8 @@ TT
         }
 
         if ($c->form->has_error) {
-            return $c->render('error', +{action => $c->req->param('action')});
+            my $action = $c->req->param('action') || '';
+            return $c->render('error', +{action => $action});
         }
         return $c->render('index');
     } #}}}
@@ -215,7 +217,8 @@ sub query_string {
     my %param = ref $_[0] ? %{$_[0]} : @_;
     my $str = '';
     while (my ($k, $v) = each %param) {
-        $v =~ s/(\W)/'%' . unpack('H2', $1)/eg;
+        $v = encode(utf8 => $v);
+        $v =~ s/([^a-zA-Z0-9_.!~*'()-])/'%' . unpack('H2', $1)/eg;
         $str .= "&$k=$v";
     }
     $str =~ s/^&//;
