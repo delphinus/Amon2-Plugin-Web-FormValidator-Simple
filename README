@@ -11,7 +11,7 @@ SYNOPSIS
         get '/user/{team}/{name}/' => sub {
             my ($c) = @_;
 
-            # do validate
+            # do validation
             $c->form(
                 team => [qw!NOT_BLANK!, [qw!LENGTH 1 10!]],
                 name => [qw!NOT_BLANK!, [qw!LENGTH 1 10!]],
@@ -68,13 +68,13 @@ DESCRIPTION
     methods and options, so see her documents.
 
 METHODS
-    $c->init()
+    "$c->init()"
         initial setup.
 
-    $c->form()
+    "$c->form()"
         validate form/query parameters.
 
-    $c->set_invalid_form()
+    "$c->set_invalid_form()"
         set error from manual validation.
 
 AUTHOR
